@@ -147,12 +147,16 @@ function prev(){if(index>0){index--;update();saveData();}}
 /* ---------- Pseudo Gmail Login ---------- */
 let currentUser=null;
 function login(){
-  const email=document.getElementById('userEmail').value.trim();
-  if(!email){alert('Enter a valid email');return;}
-  currentUser=email;
-  if(!localStorage.getItem(currentUser)){ // initialize data if first login
+  const email = document.getElementById('userEmail').value.trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // simple email regex
+  if(!email || !emailPattern.test(email)){
+    alert('Please enter a valid email address!');
+    return;
+  }
+  currentUser = email;
+  if(!localStorage.getItem(currentUser)){
     localStorage.setItem(currentUser, JSON.stringify({
-      todos:[],stopwatch:0,pomodoro:{time:1500,status:'Work',running:false},notes:''
+      todos:[], stopwatch:0, pomodoro:{time:1500,status:'Work',running:false}, notes:''
     }));
   }
   loadUserData();
@@ -236,6 +240,7 @@ window.onload=function(){
 </script>
 </body>
 </html>
+
 
 
 
