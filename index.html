@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gentle Space</title>
+
+<style>
+/* ---------- Global ---------- */
+*{
+  margin:0; padding:0; box-sizing:border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body{
+  height:100vh;
+  overflow:hidden;
+  background: radial-gradient(circle at top, #1b1f3b, #07080f);
+  color:#fff;
+}
+
+/* ---------- Animated Background ---------- */
+.bg{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  z-index:-1;
+}
+.star, .heart{
+  position:absolute;
+  bottom:-20px;
+  opacity:0.7;
+  animation: floatUp linear infinite;
+}
+.star{
+  width:6px; height:6px;
+  background:white;
+  border-radius:50%;
+}
+.heart{
+  font-size:16px;
+}
+@keyframes floatUp{
+  from{ transform:translateY(0); opacity:0; }
+  20%{ opacity:0.8; }
+  to{ transform:translateY(-120vh); opacity:0; }
+}
+
+/* ---------- Pages ---------- */
+.container{
+  width:100%; height:100%;
+  display:flex;
+  transition:transform 0.8s ease-in-out;
+}
+.page{
+  min-width:100vw;
+  padding:40px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter: blur(14px);
+  background: rgba(255,255,255,0.05);
+}
+
+h1{ font-size:2.2rem; margin-bottom:15px; }
+p{ opacity:0.85; text-align:center; max-width:500px; }
+
+/* ---------- Navigation ---------- */
+.nav{
+  position:fixed;
+  bottom:20px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+}
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:25px;
+  background:rgba(255,255,255,0.15);
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{ background:rgba(255,255,255,0.3); }
+
+/* ---------- Todo ---------- */
+input{
+  padding:10px;
+  border-radius:20px;
+  border:none;
+  outline:none;
+  width:220px;
+}
+ul{ margin-top:15px; }
+li{ opacity:0.85; margin:5px 0; }
+
+/* ---------- Stopwatch ---------- */
+.time{ font-size:2rem; margin:15px 0; }
+
+/* ---------- Notes ---------- */
+textarea{
+  width:260px; height:120px;
+  border-radius:15px;
+  padding:10px;
+  border:none;
+  resize:none;
+}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<div class="container" id="slider">
+
+<!-- Page 1 -->
+<section class="page">
+  <h1>Hey, slow down 🌙</h1>
+  <p>This is your gentle little space. Breathe. You're doing okay.</p>
+</section>
+
+<!-- Page 2 -->
+<section class="page">
+  <h1>Hydration Check 💧</h1>
+  <p>Did you drink water today?</p>
+  <button onclick="alert('Go drink some water now 💙')">Yes / No</button>
+</section>
+
+<!-- Page 3 -->
+<section class="page">
+  <h1>Todo List ✨</h1>
+  <input id="todoInput" placeholder="Write something small…" />
+  <button onclick="addTodo()">Add</button>
+  <ul id="todoList"></ul>
+</section>
+
+<!-- Page 4 -->
+<section class="page">
+  <h1>Stopwatch ⏱️</h1>
+  <div class="time" id="time">00:00</div>
+  <button onclick="start()">Start</button>
+  <button onclick="stop()">Stop</button>
+  <button onclick="reset()">Reset</button>
+</section>
+
+<!-- Page 5 -->
+<section class="page">
+  <h1>Short Notes 📝</h1>
+  <p>Write whatever your heart wants.</p>
+  <textarea placeholder="You're safe here…"></textarea>
+</section>
+
+<!-- Page 6 -->
+<section class="page">
+  <h1>That's it 🤍</h1>
+  <p>Be gentle with yourself. You don't have to win every day.</p>
+  <p style="margin-top:20px; opacity:0.6;">— by Eren</p>
+</section>
+
+</div>
+
+<div class="nav">
+  <button onclick="prev()">← Back</button>
+  <button onclick="next()">Next →</button>
+</div>
+
+<script>
+/* ---------- Background Particles ---------- */
+const bg = document.querySelector('.bg');
+function createParticle(){
+  const el = document.createElement('div');
+  const isHeart = Math.random() > 0.7;
+  el.className = isHeart ? 'heart' : 'star';
+  el.innerHTML = isHeart ? '❤' : '';
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.animationDuration = 6 + Math.random()*6 + 's';
+  bg.appendChild(el);
+  setTimeout(()=>el.remove(),12000);
+}
+setInterval(createParticle,300);
+
+/* ---------- Slider ---------- */
+let index = 0;
+const slider = document.getElementById('slider');
+function update(){ slider.style.transform = `translateX(-${index*100}vw)`; }
+function next(){ if(index<5){ index++; update(); }}
+function prev(){ if(index>0){ index--; update(); }}
+
+/* ---------- Todo ---------- */
+function addTodo(){
+  const val = todoInput.value;
+  if(!val) return;
+  const li = document.createElement('li');
+  li.textContent = '• ' + val;
+  todoList.appendChild(li);
+  todoInput.value='';
+}
+
+/* ---------- Stopwatch ---------- */
+let t=0, timer;
+function start(){ if(!timer) timer=setInterval(()=>{t++; render();},1000); }
+function stop(){ clearInterval(timer); timer=null; }
+function reset(){ stop(); t=0; render(); }
+function render(){
+  const m=String(Math.floor(t/60)).padStart(2,'0');
+  const s=String(t%60).padStart(2,'0');
+  time.textContent=`${m}:${s}`;
+}
+</script>
+
+</body>
+</html>
