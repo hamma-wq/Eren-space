@@ -48,6 +48,9 @@ li:hover{background:rgba(255,255,255,0.2);}
 .timer-controls button{padding:10px 18px;border-radius:25px;background:linear-gradient(135deg,#ff7f50,#ff1493);color:white;box-shadow:0 4px 15px rgba(0,0,0,0.25);}
 .timer-controls button:hover{filter: brightness(1.15);}
 #timerType{margin-bottom:15px;width:200px;}
+
+/* ---------- Sound Page ---------- */
+#soundSelect{padding:12px 15px;border-radius:25px;background:rgba(255,255,255,0.15);}
 </style>
 </head>
 <body>
@@ -117,7 +120,24 @@ li:hover{background:rgba(255,255,255,0.2);}
   <textarea id="notes" placeholder="You're safe here…"></textarea>
 </section>
 
-<!-- Page 6: Outro -->
+<!-- Page 6: Study Sounds -->
+<section class="page">
+  <h1>Study Sounds 🎶</h1>
+  <p>Pick a sound to help you focus.</p>
+  <select id="soundSelect" onchange="playSound()">
+    <option value="">-- Select a sound --</option>
+    <option value="rain">Rain</option>
+    <option value="forest">Forest</option>
+    <option value="coffee">Coffee Shop</option>
+    <option value="white">White Noise</option>
+  </select>
+  <div style="margin-top:20px;">
+    <button onclick="pauseSound()">Pause</button>
+    <button onclick="stopSound()">Stop</button>
+  </div>
+</section>
+
+<!-- Page 7: Outro -->
 <section class="page">
   <h1>That's it 🤍</h1>
   <p>Be gentle with yourself. You don't have to win every day.</p>
@@ -141,23 +161,21 @@ setInterval(createParticle,300);
 let index=0;
 const slider=document.getElementById('slider');
 function update(){slider.style.transform=`translateX(-${index*100}vw)`;}
-function next(){if(index<6){index++;update();saveData();}}
-function prev(){if(index>0){index--;update();saveData();}}
+function next(){
+  if(!currentUser){ alert('Please enter a valid email to continue!'); return; }
+  if(index < 7){ index++; update(); saveData(); }
+}
+function prev(){ if(index>0){ index--; update(); saveData(); }}
 
 /* ---------- Pseudo Gmail Login ---------- */
 let currentUser=null;
 function login(){
   const email = document.getElementById('userEmail').value.trim();
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // simple email regex
-  if(!email || !emailPattern.test(email)){
-    alert('Please enter a valid email address!');
-    return;
-  }
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!email || !emailPattern.test(email)){ alert('Please enter a valid email address!'); return; }
   currentUser = email;
   if(!localStorage.getItem(currentUser)){
-    localStorage.setItem(currentUser, JSON.stringify({
-      todos:[], stopwatch:0, pomodoro:{time:1500,status:'Work',running:false}, notes:''
-    }));
+    localStorage.setItem(currentUser,JSON.stringify({ todos:[], stopwatch:0, pomodoro:{time:1500,status:'Work',running:false}, notes:'' }));
   }
   loadUserData();
   alert('Welcome, '+currentUser);
@@ -198,6 +216,19 @@ function renderPomodoro(){const m=String(Math.floor(pomodoroTime/60)).padStart(2
 
 /* ---------- Notes ---------- */
 const notesArea=document.getElementById('notes');
+
+/* ---------- Sounds ---------- */
+const sounds = {
+  rain: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+  forest: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+  coffee: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+  white: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
+};
+let currentAudio = new Audio();
+currentAudio.loop = true;
+function playSound(){const sound=document.getElementById('soundSelect').value;if(sound && sounds[sound]){currentAudio.src=sounds[sound];currentAudio.play();}else{currentAudio.pause();}}
+function pauseSound(){currentAudio.pause();}
+function stopSound(){currentAudio.pause();currentAudio.currentTime=0;}
 
 /* ---------- Save & Load ---------- */
 function saveData(){
@@ -240,7 +271,3 @@ window.onload=function(){
 </script>
 </body>
 </html>
-
-
-
-
