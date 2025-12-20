@@ -8,114 +8,65 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{
-  height:100vh;
-  overflow:hidden;
+  height:100vh;overflow:hidden;
   background:radial-gradient(circle at top,#1b1f3b,#07080f);
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  color:#fff;display:flex;justify-content:center;align-items:center;
 }
-button{cursor:pointer;border:none;outline:none;transition:0.3s;font-weight:600;}
-input,textarea,select{outline:none;border:none;font-family:inherit;color:white;}
+button{cursor:pointer;border:none;font-weight:600;}
+input,textarea,select{
+  border:none;outline:none;color:white;
+  background:rgba(255,255,255,.15);
+}
 
-.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;}
-.star,.heart{position:absolute;bottom:-20px;opacity:0.7;animation:floatUp linear infinite;}
+.bg{position:fixed;inset:0;z-index:-1;}
+.star,.heart{position:absolute;bottom:-20px;opacity:.7;animation:floatUp linear infinite;}
 .star{width:6px;height:6px;background:white;border-radius:50%;}
 .heart{font-size:18px;}
 @keyframes floatUp{
   from{transform:translateY(0);opacity:0;}
-  20%{opacity:0.8;}
+  20%{opacity:.8;}
   to{transform:translateY(-120vh);opacity:0;}
 }
 
-/* Container */
-.container{width:100%;height:100%;display:flex;transition:transform 0.8s ease-in-out;}
+.container{width:100%;height:100%;display:flex;transition:.8s;}
 .page{
-  min-width:100vw;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  min-width:100vw;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   backdrop-filter:blur(18px);
-  background:rgba(255,255,255,0.05);
-  border-radius:25px;
-  padding:40px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.3);
-  gap:15px;
+  background:rgba(255,255,255,.05);
+  padding:40px;gap:15px;
 }
 
-h1{font-size:2.4rem;text-align:center;}
-p{text-align:center;opacity:0.8;max-width:520px;line-height:1.6;}
+h1{text-align:center;font-size:2.3rem;}
+p{text-align:center;opacity:.8;max-width:520px;line-height:1.6;}
 
-/* Nav */
-.nav{
-  position:fixed;
-  bottom:20px;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:20px;
-}
+.nav{position:fixed;bottom:20px;width:100%;display:flex;justify-content:center;gap:20px;}
 .nav button{
-  padding:12px 22px;
-  border-radius:30px;
-  background:linear-gradient(135deg,#6a5acd,#00bfff);
-  color:white;
+  padding:12px 22px;border-radius:30px;
+  background:linear-gradient(135deg,#6a5acd,#00bfff);color:white;
 }
 
-/* Todo */
-input,select{
-  padding:12px 15px;
-  border-radius:25px;
-  background:rgba(255,255,255,0.15);
-}
-textarea{
-  width:260px;
-  height:140px;
-  padding:15px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.1);
-  resize:none;
-}
 ul{list-style:none;width:260px;}
 li{
-  background:rgba(255,255,255,0.1);
-  padding:10px 15px;
-  border-radius:20px;
-  margin:8px 0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  background:rgba(255,255,255,.1);
+  padding:10px 15px;border-radius:20px;margin:8px 0;
+  display:flex;justify-content:space-between;
 }
-li.done{text-decoration:line-through;opacity:0.6;}
-li button{
-  margin-left:5px;
-  padding:5px 8px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.25);
-}
+li.done{text-decoration:line-through;opacity:.6;}
 
-/* Timer */
-.time{font-size:2.5rem;font-weight:600;}
+.time{font-size:2.6rem;font-weight:600;}
 .timer-controls{display:flex;gap:15px;}
 .timer-controls button{
-  padding:10px 18px;
-  border-radius:25px;
+  padding:10px 18px;border-radius:25px;
   background:linear-gradient(135deg,#ff7f50,#ff1493);
   color:white;
 }
 
-/* Fullscreen */
 #fullscreenBtn{
-  position:fixed;
-  top:20px;
-  right:20px;
-  padding:10px 15px;
-  border-radius:15px;
+  position:fixed;top:20px;right:20px;
+  padding:10px 15px;border-radius:15px;
   background:linear-gradient(135deg,#00bfff,#6a5acd);
-  color:white;
 }
 </style>
 </head>
@@ -123,65 +74,58 @@ li button{
 <body>
 
 <div class="bg"></div>
-
 <button id="fullscreenBtn">Fullscreen</button>
 
 <div class="container" id="slider">
 
-<!-- Page 0 : Motivational Intro -->
+<!-- PAGE 0 INTRO -->
 <section class="page">
   <h1>You’re doing enough 🌙</h1>
   <p>
-    Slow down. Take a breath.<br>
-    Not everything needs to be fixed today.<br>
+    Slow down. Breathe.<br>
+    Not everything needs fixing today.<br>
     You’re allowed to move at your own pace.
   </p>
 </section>
 
-<!-- Page 1 -->
+<!-- PAGE 1 HYDRATION -->
 <section class="page">
-  <h1>Hey, slow down 🤍</h1>
-  <p>This is your gentle little space. You’re safe here.</p>
+  <h1>Hydration 💧</h1>
+  <button onclick="alert('Drink water now 💙')">Reminder</button>
 </section>
 
-<!-- Page 2 -->
+<!-- PAGE 2 TODO -->
 <section class="page">
-  <h1>Hydration Check 💧</h1>
-  <p>Did you drink water today?</p>
-  <button onclick="alert('Go drink some water 💙')">Okay</button>
-</section>
-
-<!-- Page 3 -->
-<section class="page">
-  <h1>Todo List ✨</h1>
+  <h1>Todo ✨</h1>
   <input id="todoInput" placeholder="Write something…" />
   <button onclick="addTodo()">Add</button>
   <ul id="todoList"></ul>
 </section>
 
-<!-- Page 4 -->
+<!-- PAGE 3 TIMER -->
 <section class="page">
-  <h1>Timer ⏱️</h1>
+  <h1>Pomodoro ⏱️</h1>
 
-  <div class="time" id="time">00:00</div>
+  <div class="time" id="pomodoroTime">45:00</div>
   <div class="timer-controls">
-    <button onclick="start()">Start</button>
-    <button onclick="stop()">Stop</button>
-    <button onclick="reset()">Reset</button>
+    <button onclick="startPomodoro()">Start</button>
+    <button onclick="stopPomodoro()">Stop</button>
+    <button onclick="resetPomodoro()">Reset</button>
   </div>
+  <p id="pomodoroStatus">Work</p>
 </section>
 
-<!-- Page 5 -->
+<!-- PAGE 4 NOTES -->
 <section class="page">
-  <h1>Short Notes 📝</h1>
+  <h1>Notes 📝</h1>
   <textarea id="notes" placeholder="You’re safe here…"></textarea>
 </section>
 
-<!-- Page 6 -->
+<!-- PAGE 5 OUTRO -->
 <section class="page">
-  <h1>That’s enough for today 🤍</h1>
-  <p>You don’t have to win every day. Showing up is enough.</p>
-  <p style="opacity:0.6;">— by Eren</p>
+  <h1>That’s enough 🤍</h1>
+  <p>You showed up. That counts.</p>
+  <p style="opacity:.6;">— by Eren</p>
 </section>
 
 </div>
@@ -192,26 +136,33 @@ li button{
 </div>
 
 <script>
-/* Background */
+/* particles */
 const bg=document.querySelector('.bg');
 setInterval(()=>{
-  const el=document.createElement('div');
-  el.className=Math.random()>0.7?'heart':'star';
-  el.innerHTML=el.className==='heart'?'❤':'';
-  el.style.left=Math.random()*100+'vw';
-  el.style.animationDuration=(8+Math.random()*8)+'s';
-  bg.appendChild(el);
-  setTimeout(()=>el.remove(),16000);
+  const e=document.createElement('div');
+  e.className=Math.random()>.7?'heart':'star';
+  e.innerHTML=e.className==='heart'?'❤':'';
+  e.style.left=Math.random()*100+'vw';
+  e.style.animationDuration=(8+Math.random()*8)+'s';
+  bg.appendChild(e);
+  setTimeout(()=>e.remove(),16000);
 },300);
 
-/* Slider */
-let index=0;
+/* slider + swipe */
+let index=0,startX=0;
 const slider=document.getElementById('slider');
 function update(){slider.style.transform=`translateX(-${index*100}vw)`;}
-function next(){if(index<6){index++;update();saveData();}}
+function next(){if(index<5){index++;update();saveData();}}
 function prev(){if(index>0){index--;update();saveData();}}
 
-/* Todo */
+document.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-startX;
+  if(dx>60) prev();
+  if(dx<-60) next();
+});
+
+/* todo */
 const todoInput=document.getElementById('todoInput');
 const todoList=document.getElementById('todoList');
 function addTodo(){
@@ -219,60 +170,80 @@ function addTodo(){
   const li=document.createElement('li');
   li.textContent=todoInput.value;
   li.onclick=()=>li.classList.toggle('done');
-  const del=document.createElement('button');
-  del.textContent='❌';
-  del.onclick=e=>{e.stopPropagation();li.remove();saveData();}
-  li.appendChild(del);
   todoList.appendChild(li);
   todoInput.value='';
   saveData();
 }
 
-/* Stopwatch */
-let t=0,timer=null;
-function start(){if(!timer)timer=setInterval(()=>{t++;render();saveData();},1000);}
-function stop(){clearInterval(timer);timer=null;}
-function reset(){stop();t=0;render();saveData();}
-function render(){
-  document.getElementById('time').textContent=
-  String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
+/* 🔔 bell sound */
+const bell=new Audio("https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg");
+
+/* pomodoro 45/10 */
+let pomodoroTimer=null;
+let pomodoroTime=2700; // 45 min
+let pomodoroStatus='Work';
+let lastTick=Date.now();
+
+function startPomodoro(){
+  if(pomodoroTimer) return;
+  lastTick=Date.now();
+  pomodoroTimer=setInterval(()=>{
+    const now=Date.now();
+    const diff=Math.floor((now-lastTick)/1000);
+    if(diff>0){
+      pomodoroTime-=diff;
+      lastTick=now;
+      if(pomodoroTime<=0){
+        bell.play();
+        pomodoroStatus=pomodoroStatus==='Work'?'Break':'Work';
+        pomodoroTime=pomodoroStatus==='Work'?2700:600;
+      }
+      renderPomodoro();
+      saveData();
+    }
+  },1000);
 }
 
-/* Notes */
-const notes=document.getElementById('notes');
+function stopPomodoro(){
+  clearInterval(pomodoroTimer);
+  pomodoroTimer=null;
+  saveData();
+}
 
-/* Save */
+function resetPomodoro(){
+  stopPomodoro();
+  pomodoroTime=2700;
+  pomodoroStatus='Work';
+  renderPomodoro();
+  saveData();
+}
+
+function renderPomodoro(){
+  document.getElementById('pomodoroTime').textContent=
+  String(Math.floor(pomodoroTime/60)).padStart(2,'0')+':' +
+  String(pomodoroTime%60).padStart(2,'0');
+  document.getElementById('pomodoroStatus').textContent=pomodoroStatus;
+}
+
+/* save */
+const notes=document.getElementById('notes');
 function saveData(){
-  const todos=[];
-  todoList.querySelectorAll('li').forEach(li=>{
-    todos.push({text:li.firstChild.textContent,done:li.classList.contains('done')});
-  });
   localStorage.setItem('gentleSpace',JSON.stringify({
-    todos, time:t, notes:notes.value
+    index,pomodoroTime,pomodoroStatus,notes:notes.value
   }));
 }
 window.onload=()=>{
   const d=JSON.parse(localStorage.getItem('gentleSpace')||'{}');
-  if(d.todos){
-    d.todos.forEach(t=>{
-      const li=document.createElement('li');
-      li.textContent=t.text;
-      if(t.done)li.classList.add('done');
-      li.onclick=()=>li.classList.toggle('done');
-      const del=document.createElement('button');
-      del.textContent='❌';
-      del.onclick=e=>{e.stopPropagation();li.remove();saveData();}
-      li.appendChild(del);
-      todoList.appendChild(li);
-    });
-  }
-  t=d.time||0; render();
+  index=d.index||0;update();
+  pomodoroTime=d.pomodoroTime||2700;
+  pomodoroStatus=d.pomodoroStatus||'Work';
   notes.value=d.notes||'';
-}
+  renderPomodoro();
+};
 
-/* Fullscreen */
+/* fullscreen */
 document.getElementById('fullscreenBtn').onclick=()=>{
-  if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+  if(!document.fullscreenElement)document.documentElement.requestFullscreen();
   else document.exitFullscreen();
 };
 </script>
