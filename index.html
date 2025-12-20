@@ -6,95 +6,87 @@
 <title>Gentle Space 🌙</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
 body{
   height:100vh;overflow:hidden;
   background:radial-gradient(circle at top,#1b1f3b,#07080f);
-  color:#fff;display:flex;justify-content:center;align-items:center;
+  color:#fff;display:flex;justify-content:center;align-items:center
 }
-button{cursor:pointer;border:none;font-weight:600;}
+button{border:none;cursor:pointer;font-weight:600}
 input,textarea,select{
-  border:none;outline:none;color:white;
+  border:none;outline:none;
   background:rgba(255,255,255,.15);
+  color:white;padding:12px;border-radius:20px
 }
 
-.bg{position:fixed;inset:0;z-index:-1;}
-.star,.heart{position:absolute;bottom:-20px;opacity:.7;animation:floatUp linear infinite;}
-.star{width:6px;height:6px;background:white;border-radius:50%;}
-.heart{font-size:18px;}
-@keyframes floatUp{
-  from{transform:translateY(0);opacity:0;}
-  20%{opacity:.8;}
-  to{transform:translateY(-120vh);opacity:0;}
-}
-
-.container{width:100%;height:100%;display:flex;transition:.8s;}
+.container{width:100%;height:100%;display:flex;transition:.8s}
 .page{
   min-width:100vw;min-height:100vh;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
+  gap:15px;padding:40px;
   backdrop-filter:blur(18px);
-  background:rgba(255,255,255,.05);
-  padding:40px;gap:15px;
+  background:rgba(255,255,255,.05)
 }
 
-h1{text-align:center;font-size:2.3rem;}
-p{text-align:center;opacity:.8;max-width:520px;line-height:1.6;}
+h1{text-align:center;font-size:2.2rem}
+p{text-align:center;opacity:.8}
 
-.nav{position:fixed;bottom:20px;width:100%;display:flex;justify-content:center;gap:20px;}
+.nav{
+  position:fixed;bottom:20px;width:100%;
+  display:flex;justify-content:center;gap:20px
+}
 .nav button{
   padding:12px 22px;border-radius:30px;
-  background:linear-gradient(135deg,#6a5acd,#00bfff);color:white;
+  background:linear-gradient(135deg,#6a5acd,#00bfff);color:white
 }
 
-ul{list-style:none;width:260px;}
+/* Fullscreen */
+#fsBtn{
+  position:fixed;top:20px;right:20px;
+  padding:10px 14px;border-radius:15px;
+  background:linear-gradient(135deg,#ff7f50,#ff1493);
+  color:white;z-index:9999
+}
+
+/* Todo */
+ul{list-style:none;width:260px}
 li{
-  background:rgba(255,255,255,.1);
-  padding:10px 15px;border-radius:20px;margin:8px 0;
-  display:flex;justify-content:space-between;
+  background:rgba(255,255,255,.12);
+  padding:10px 15px;border-radius:20px;
+  margin:8px 0;
+  display:flex;justify-content:space-between;align-items:center
 }
-li.done{text-decoration:line-through;opacity:.6;}
+li.done{text-decoration:line-through;opacity:.6}
+li button{
+  margin-left:5px;padding:5px 8px;
+  border-radius:12px;background:rgba(255,255,255,.3)
+}
 
-.time{font-size:2.6rem;font-weight:600;}
-.timer-controls{display:flex;gap:15px;}
+/* Timer */
+.time{font-size:2.6rem;font-weight:600}
+.timer-controls{display:flex;gap:15px}
 .timer-controls button{
   padding:10px 18px;border-radius:25px;
   background:linear-gradient(135deg,#ff7f50,#ff1493);
-  color:white;
-}
-
-#fullscreenBtn{
-  position:fixed;top:20px;right:20px;
-  padding:10px 15px;border-radius:15px;
-  background:linear-gradient(135deg,#00bfff,#6a5acd);
+  color:white
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
-<button id="fullscreenBtn">Fullscreen</button>
+<button id="fsBtn">Fullscreen</button>
 
 <div class="container" id="slider">
 
-<!-- PAGE 0 INTRO -->
+<!-- PAGE 0 -->
 <section class="page">
   <h1>You’re doing enough 🌙</h1>
-  <p>
-    Slow down. Breathe.<br>
-    Not everything needs fixing today.<br>
-    You’re allowed to move at your own pace.
-  </p>
+  <p>Slow down. One step is enough.</p>
 </section>
 
-<!-- PAGE 1 HYDRATION -->
-<section class="page">
-  <h1>Hydration 💧</h1>
-  <button onclick="alert('Drink water now 💙')">Reminder</button>
-</section>
-
-<!-- PAGE 2 TODO -->
+<!-- PAGE 1 TODO -->
 <section class="page">
   <h1>Todo ✨</h1>
   <input id="todoInput" placeholder="Write something…" />
@@ -102,30 +94,48 @@ li.done{text-decoration:line-through;opacity:.6;}
   <ul id="todoList"></ul>
 </section>
 
-<!-- PAGE 3 TIMER -->
+<!-- PAGE 2 TIMER -->
 <section class="page">
-  <h1>Pomodoro ⏱️</h1>
+  <h1>Timer ⏱️</h1>
 
-  <div class="time" id="pomodoroTime">45:00</div>
-  <div class="timer-controls">
-    <button onclick="startPomodoro()">Start</button>
-    <button onclick="stopPomodoro()">Stop</button>
-    <button onclick="resetPomodoro()">Reset</button>
+  <select id="timerType" onchange="switchTimer()">
+    <option value="stopwatch">Stopwatch</option>
+    <option value="pomodoro">Pomodoro</option>
+  </select>
+
+  <!-- STOPWATCH -->
+  <div id="stopwatchDiv">
+    <div class="time" id="swTime">00:00</div>
+    <div class="timer-controls">
+      <button onclick="swStart()">Start</button>
+      <button onclick="swStop()">Stop</button>
+      <button onclick="swReset()">Reset</button>
+    </div>
   </div>
-  <p id="pomodoroStatus">Work</p>
+
+  <!-- POMODORO -->
+  <div id="pomodoroDiv" style="display:none">
+    <input id="pmInput" type="number" min="1" placeholder="Minutes (eg 45)" />
+    <div class="time" id="pmTime">00:00</div>
+    <div class="timer-controls">
+      <button onclick="pmStart()">Start</button>
+      <button onclick="pmStop()">Stop</button>
+      <button onclick="pmReset()">Reset</button>
+    </div>
+  </div>
 </section>
 
-<!-- PAGE 4 NOTES -->
+<!-- PAGE 3 NOTES -->
 <section class="page">
   <h1>Notes 📝</h1>
-  <textarea id="notes" placeholder="You’re safe here…"></textarea>
+  <textarea id="notes" placeholder="Write freely…"></textarea>
 </section>
 
-<!-- PAGE 5 OUTRO -->
+<!-- PAGE 4 -->
 <section class="page">
-  <h1>That’s enough 🤍</h1>
+  <h1>Enough for today 🤍</h1>
   <p>You showed up. That counts.</p>
-  <p style="opacity:.6;">— by Eren</p>
+  <p style="opacity:.6">— by Eren</p>
 </section>
 
 </div>
@@ -136,117 +146,132 @@ li.done{text-decoration:line-through;opacity:.6;}
 </div>
 
 <script>
-/* particles */
-const bg=document.querySelector('.bg');
-setInterval(()=>{
-  const e=document.createElement('div');
-  e.className=Math.random()>.7?'heart':'star';
-  e.innerHTML=e.className==='heart'?'❤':'';
-  e.style.left=Math.random()*100+'vw';
-  e.style.animationDuration=(8+Math.random()*8)+'s';
-  bg.appendChild(e);
-  setTimeout(()=>e.remove(),16000);
-},300);
-
-/* slider + swipe */
-let index=0,startX=0;
+/* SLIDER */
+let index=0;
 const slider=document.getElementById('slider');
 function update(){slider.style.transform=`translateX(-${index*100}vw)`;}
-function next(){if(index<5){index++;update();saveData();}}
-function prev(){if(index>0){index--;update();saveData();}}
+function next(){if(index<4){index++;update();save();}}
+function prev(){if(index>0){index--;update();save();}}
 
-document.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
-document.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-startX;
-  if(dx>60) prev();
-  if(dx<-60) next();
-});
+/* FULLSCREEN */
+document.getElementById('fsBtn').onclick=()=>{
+  if(!document.fullscreenElement)
+    document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+};
 
-/* todo */
+/* TODO */
 const todoInput=document.getElementById('todoInput');
 const todoList=document.getElementById('todoList');
+
 function addTodo(){
   if(!todoInput.value) return;
   const li=document.createElement('li');
-  li.textContent=todoInput.value;
-  li.onclick=()=>li.classList.toggle('done');
+  const span=document.createElement('span');
+  span.textContent=todoInput.value;
+  span.onclick=()=>{li.classList.toggle('done');save();};
+
+  const edit=document.createElement('button');
+  edit.textContent='✏️';
+  edit.onclick=e=>{
+    e.stopPropagation();
+    const t=prompt('Edit task',span.textContent);
+    if(t){span.textContent=t;save();}
+  };
+
+  const del=document.createElement('button');
+  del.textContent='❌';
+  del.onclick=e=>{e.stopPropagation();li.remove();save();};
+
+  li.append(span,edit,del);
   todoList.appendChild(li);
   todoInput.value='';
-  saveData();
+  save();
 }
 
-/* 🔔 bell sound */
+/* STOPWATCH */
+let sw=0,swTimer=null;
+function swStart(){if(!swTimer)swTimer=setInterval(()=>{sw++;renderSW();save();},1000);}
+function swStop(){clearInterval(swTimer);swTimer=null;}
+function swReset(){swStop();sw=0;renderSW();save();}
+function renderSW(){
+  document.getElementById('swTime').textContent=
+  String(Math.floor(sw/60)).padStart(2,'0')+':'+String(sw%60).padStart(2,'0');
+}
+
+/* POMODORO (USER TIME) */
+let pm=0,pmTimer=null;
 const bell=new Audio("https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg");
 
-/* pomodoro 45/10 */
-let pomodoroTimer=null;
-let pomodoroTime=2700; // 45 min
-let pomodoroStatus='Work';
-let lastTick=Date.now();
-
-function startPomodoro(){
-  if(pomodoroTimer) return;
-  lastTick=Date.now();
-  pomodoroTimer=setInterval(()=>{
-    const now=Date.now();
-    const diff=Math.floor((now-lastTick)/1000);
-    if(diff>0){
-      pomodoroTime-=diff;
-      lastTick=now;
-      if(pomodoroTime<=0){
-        bell.play();
-        pomodoroStatus=pomodoroStatus==='Work'?'Break':'Work';
-        pomodoroTime=pomodoroStatus==='Work'?2700:600;
-      }
-      renderPomodoro();
-      saveData();
+function pmStart(){
+  if(pmTimer) return;
+  if(pm<=0){
+    const min=parseInt(document.getElementById('pmInput').value);
+    if(!min||min<1) return alert('Enter minutes');
+    pm=min*60;
+  }
+  pmTimer=setInterval(()=>{
+    pm--;
+    if(pm<=0){
+      bell.play();
+      pmStop();
     }
+    renderPM();save();
   },1000);
 }
-
-function stopPomodoro(){
-  clearInterval(pomodoroTimer);
-  pomodoroTimer=null;
-  saveData();
+function pmStop(){clearInterval(pmTimer);pmTimer=null;}
+function pmReset(){pmStop();pm=0;renderPM();save();}
+function renderPM(){
+  document.getElementById('pmTime').textContent=
+  String(Math.floor(pm/60)).padStart(2,'0')+':'+String(pm%60).padStart(2,'0');
 }
 
-function resetPomodoro(){
-  stopPomodoro();
-  pomodoroTime=2700;
-  pomodoroStatus='Work';
-  renderPomodoro();
-  saveData();
+function switchTimer(){
+  const t=document.getElementById('timerType').value;
+  document.getElementById('stopwatchDiv').style.display=t==='stopwatch'?'block':'none';
+  document.getElementById('pomodoroDiv').style.display=t==='pomodoro'?'block':'none';
 }
 
-function renderPomodoro(){
-  document.getElementById('pomodoroTime').textContent=
-  String(Math.floor(pomodoroTime/60)).padStart(2,'0')+':' +
-  String(pomodoroTime%60).padStart(2,'0');
-  document.getElementById('pomodoroStatus').textContent=pomodoroStatus;
-}
-
-/* save */
+/* SAVE / LOAD */
 const notes=document.getElementById('notes');
-function saveData(){
+function save(){
+  const todos=[];
+  todoList.querySelectorAll('li').forEach(li=>{
+    todos.push({
+      text:li.querySelector('span').textContent,
+      done:li.classList.contains('done')
+    });
+  });
   localStorage.setItem('gentleSpace',JSON.stringify({
-    index,pomodoroTime,pomodoroStatus,notes:notes.value
+    index,sw,pm,notes:notes.value,todos
   }));
 }
+
 window.onload=()=>{
   const d=JSON.parse(localStorage.getItem('gentleSpace')||'{}');
   index=d.index||0;update();
-  pomodoroTime=d.pomodoroTime||2700;
-  pomodoroStatus=d.pomodoroStatus||'Work';
+  sw=d.sw||0;renderSW();
+  pm=d.pm||0;renderPM();
   notes.value=d.notes||'';
-  renderPomodoro();
-};
-
-/* fullscreen */
-document.getElementById('fullscreenBtn').onclick=()=>{
-  if(!document.fullscreenElement)document.documentElement.requestFullscreen();
-  else document.exitFullscreen();
+  (d.todos||[]).forEach(t=>{
+    const li=document.createElement('li');
+    if(t.done)li.classList.add('done');
+    const span=document.createElement('span');
+    span.textContent=t.text;
+    span.onclick=()=>{li.classList.toggle('done');save();};
+    const e=document.createElement('button');
+    e.textContent='✏️';
+    e.onclick=()=>{const x=prompt('Edit task',span.textContent);if(x){span.textContent=x;save();}};
+    const del=document.createElement('button');
+    del.textContent='❌';
+    del.onclick=()=>{li.remove();save();};
+    li.append(span,e,del);
+    todoList.appendChild(li);
+  });
 };
 </script>
 
 </body>
 </html>
+
+
