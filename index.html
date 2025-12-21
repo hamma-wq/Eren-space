@@ -13,15 +13,11 @@
   font-family:Poppins,sans-serif
 }
 
-/* BODY FIX */
 body{
   min-height:100svh;
   overflow-x:hidden;
   background:radial-gradient(circle at top,#1b1f3b,#07080f);
   color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center
 }
 
 button{
@@ -37,13 +33,12 @@ input,textarea,select{
   color:white;
   padding:12px;
   border-radius:20px;
-  font-size:16px; /* mobile zoom fix */
+  font-size:16px;
 }
 
 /* SLIDER */
 .container{
   width:500vw;
-  height:100%;
   display:flex;
   transition:transform .6s ease;
 }
@@ -56,7 +51,7 @@ input,textarea,select{
   align-items:center;
   justify-content:center;
   gap:15px;
-  padding:40px;
+  padding:80px 40px 40px; /* top space for nav */
   backdrop-filter:blur(18px);
   background:rgba(255,255,255,.05);
 }
@@ -65,34 +60,36 @@ input,textarea,select{
 h1{text-align:center;font-size:2.2rem}
 p{text-align:center;opacity:.8}
 
-/* NAV */
+/* NAV (TOP) */
 .nav{
   position:fixed;
-  bottom:20px;
-  width:100%;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
   display:flex;
-  justify-content:center;
-  gap:20px;
-  z-index:50
+  gap:14px;
+  z-index:1000;
 }
 
 .nav button{
-  padding:12px 22px;
-  border-radius:30px;
+  padding:10px 18px;
+  border-radius:25px;
   background:linear-gradient(135deg,#6a5acd,#00bfff);
-  color:white
+  color:white;
+  font-size:.9rem;
 }
 
 /* FULLSCREEN */
 #fsBtn{
   position:fixed;
-  top:20px;
-  right:20px;
-  padding:10px 14px;
+  top:15px;
+  right:15px;
+  padding:8px 12px;
   border-radius:15px;
   background:linear-gradient(135deg,#ff7f50,#ff1493);
   color:white;
-  z-index:9999
+  z-index:1000;
+  font-size:.85rem;
 }
 
 /* TODO */
@@ -131,7 +128,9 @@ li button{
 
 .timer-controls{
   display:flex;
-  gap:15px
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center
 }
 
 .timer-controls button{
@@ -141,9 +140,8 @@ li button{
   color:white
 }
 
-/* MOBILE RESPONSIVE */
+/* MOBILE */
 @media (max-width:768px){
-
   h1{font-size:1.6rem}
   p{font-size:.95rem}
 
@@ -152,51 +150,28 @@ li button{
     max-width:320px
   }
 
-  textarea{
-    min-height:160px
-  }
-
-  ul{
-    width:100%;
-    max-width:320px
-  }
-
-  .timer-controls{
-    flex-wrap:wrap;
-    justify-content:center
-  }
-
-  .nav{
-    bottom:12px;
-    gap:10px
-  }
-
-  .nav button{
-    padding:10px 16px;
-    font-size:.9rem
-  }
-
-  #fsBtn{
-    padding:8px 12px;
-    font-size:.85rem
-  }
+  textarea{min-height:160px}
+  ul{max-width:320px}
 }
 </style>
 </head>
 
 <body>
 
+<div class="nav">
+  <button onclick="prev()">← Back</button>
+  <button onclick="next()">Next →</button>
+</div>
+
 <button id="fsBtn">Fullscreen</button>
 
 <div class="container" id="slider">
 
-<!-- PAGE 0 -->
 <section class="page">
   <h1>You’re doing enough 🌙</h1>
   <p>Slow down. One step is enough.</p>
 </section>
 
-<!-- PAGE 1 TODO -->
 <section class="page">
   <h1>Todo ✨</h1>
   <input id="todoInput" placeholder="Write something…" />
@@ -204,7 +179,6 @@ li button{
   <ul id="todoList"></ul>
 </section>
 
-<!-- PAGE 2 TIMER -->
 <section class="page">
   <h1>Timer ⏱️</h1>
 
@@ -233,24 +207,17 @@ li button{
   </div>
 </section>
 
-<!-- PAGE 3 NOTES -->
 <section class="page">
   <h1>Notes 📝</h1>
   <textarea id="notes" placeholder="Write freely…"></textarea>
 </section>
 
-<!-- PAGE 4 -->
 <section class="page">
   <h1>Enough for today 🤍</h1>
   <p>You showed up. That counts.</p>
   <p style="opacity:.6">— by Eren</p>
 </section>
 
-</div>
-
-<div class="nav">
-  <button onclick="prev()">← Back</button>
-  <button onclick="next()">Next →</button>
 </div>
 
 <script>
@@ -261,13 +228,8 @@ function update(){
   slider.style.transform=`translateX(-${index*100}vw)`;
 }
 
-function next(){
-  if(index<4){index++;update();save();}
-}
-
-function prev(){
-  if(index>0){index--;update();save();}
-}
+function next(){ if(index<4){index++;update();save();} }
+function prev(){ if(index>0){index--;update();save();} }
 
 /* FULLSCREEN */
 document.getElementById('fsBtn').onclick=()=>{
@@ -282,103 +244,66 @@ const todoList=document.getElementById('todoList');
 
 function addTodo(){
   if(!todoInput.value) return;
-
   const li=document.createElement('li');
   const span=document.createElement('span');
   span.textContent=todoInput.value;
   span.onclick=()=>{li.classList.toggle('done');save();};
 
-  const edit=document.createElement('button');
-  edit.textContent='✏️';
-  edit.onclick=e=>{
-    e.stopPropagation();
-    const t=prompt('Edit task',span.textContent);
-    if(t){span.textContent=t;save();}
-  };
+  const e=document.createElement('button');
+  e.textContent='✏️';
+  e.onclick=()=>{const x=prompt('Edit task',span.textContent);if(x){span.textContent=x;save();}};
 
-  const del=document.createElement('button');
-  del.textContent='❌';
-  del.onclick=e=>{e.stopPropagation();li.remove();save();};
+  const d=document.createElement('button');
+  d.textContent='❌';
+  d.onclick=()=>{li.remove();save();};
 
-  li.append(span,edit,del);
+  li.append(span,e,d);
   todoList.appendChild(li);
   todoInput.value='';
   save();
 }
 
-/* STOPWATCH */
+/* TIMER */
 let sw=0,swTimer=null;
-
-function swStart(){
-  if(!swTimer)
-    swTimer=setInterval(()=>{
-      sw++;
-      renderSW();
-      save();
-    },1000);
-}
-
+function swStart(){if(!swTimer)swTimer=setInterval(()=>{sw++;renderSW();save();},1000);}
 function swStop(){clearInterval(swTimer);swTimer=null;}
 function swReset(){swStop();sw=0;renderSW();save();}
+function renderSW(){swTime.textContent=String(Math.floor(sw/60)).padStart(2,'0')+':'+String(sw%60).padStart(2,'0');}
 
-function renderSW(){
-  document.getElementById('swTime').textContent=
-  String(Math.floor(sw/60)).padStart(2,'0')+':'+String(sw%60).padStart(2,'0');
-}
-
-/* POMODORO */
 let pm=0,pmTimer=null;
 const bell=new Audio("https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg");
 
 function pmStart(){
   if(pmTimer) return;
-
   if(pm<=0){
-    const min=parseInt(document.getElementById('pmInput').value);
-    if(!min||min<1) return alert('Enter minutes');
-    pm=min*60;
+    const m=parseInt(pmInput.value);
+    if(!m) return alert('Enter minutes');
+    pm=m*60;
   }
-
   pmTimer=setInterval(()=>{
     pm--;
-    if(pm<=0){
-      bell.play();
-      pmStop();
-    }
-    renderPM();
-    save();
+    if(pm<=0){bell.play();pmStop();}
+    renderPM();save();
   },1000);
 }
-
 function pmStop(){clearInterval(pmTimer);pmTimer=null;}
 function pmReset(){pmStop();pm=0;renderPM();save();}
-
-function renderPM(){
-  document.getElementById('pmTime').textContent=
-  String(Math.floor(pm/60)).padStart(2,'0')+':'+String(pm%60).padStart(2,'0');
-}
+function renderPM(){pmTime.textContent=String(Math.floor(pm/60)).padStart(2,'0')+':'+String(pm%60).padStart(2,'0');}
 
 function switchTimer(){
-  const t=document.getElementById('timerType').value;
-  document.getElementById('stopwatchDiv').style.display=t==='stopwatch'?'block':'none';
-  document.getElementById('pomodoroDiv').style.display=t==='pomodoro'?'block':'none';
+  const t=timerType.value;
+  stopwatchDiv.style.display=t==='stopwatch'?'block':'none';
+  pomodoroDiv.style.display=t==='pomodoro'?'block':'none';
 }
 
-/* SAVE / LOAD */
+/* SAVE */
 const notes=document.getElementById('notes');
-
 function save(){
   const todos=[];
   todoList.querySelectorAll('li').forEach(li=>{
-    todos.push({
-      text:li.querySelector('span').textContent,
-      done:li.classList.contains('done')
-    });
+    todos.push({text:li.querySelector('span').textContent,done:li.classList.contains('done')});
   });
-
-  localStorage.setItem('gentleSpace',JSON.stringify({
-    index,sw,pm,notes:notes.value,todos
-  }));
+  localStorage.setItem('gentleSpace',JSON.stringify({index,sw,pm,notes:notes.value,todos}));
 }
 
 window.onload=()=>{
@@ -387,24 +312,17 @@ window.onload=()=>{
   sw=d.sw||0;renderSW();
   pm=d.pm||0;renderPM();
   notes.value=d.notes||'';
-
   (d.todos||[]).forEach(t=>{
     const li=document.createElement('li');
     if(t.done)li.classList.add('done');
-
-    const span=document.createElement('span');
-    span.textContent=t.text;
-    span.onclick=()=>{li.classList.toggle('done');save();};
-
-    const e=document.createElement('button');
-    e.textContent='✏️';
-    e.onclick=()=>{const x=prompt('Edit task',span.textContent);if(x){span.textContent=x;save();}};
-
-    const del=document.createElement('button');
-    del.textContent='❌';
-    del.onclick=()=>{li.remove();save();};
-
-    li.append(span,e,del);
+    const s=document.createElement('span');
+    s.textContent=t.text;
+    s.onclick=()=>{li.classList.toggle('done');save();};
+    const e=document.createElement('button');e.textContent='✏️';
+    e.onclick=()=>{const x=prompt('Edit task',s.textContent);if(x){s.textContent=x;save();}};
+    const dlt=document.createElement('button');dlt.textContent='❌';
+    dlt.onclick=()=>{li.remove();save();};
+    li.append(s,e,dlt);
     todoList.appendChild(li);
   });
 };
